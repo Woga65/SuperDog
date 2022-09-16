@@ -272,7 +272,7 @@ export class Hit extends State {
         this.game.player.frameX = 0;
         this.game.player.maxFrame = 10;
         this.game.player.frameY = 4;
-        this.dizzyDuration = 2;
+        this.dizzyDuration = 1;
         this.dizzyCount = 0;
         this.game.player.consumesEnergy = false;
         this.game.player.scoreFactor = 0;
