@@ -81,6 +81,7 @@ export class Sitting extends State {
             { key: 'ArrowRight', state: states.RUNNING, speed: 1, needsEnergy: false },
             { key: 'SwipeRight', state: states.RUNNING, speed: 1, needsEnergy: false },
             { key: 'Shift', state: states.ROLLING, speed: 2, needsEnergy: true },
+            { key: 'Control', state: states.ROLLING, speed: 2, needsEnergy: true },
             { key: 'AttackBtn', state: states.ROLLING, speed: 2, needsEnergy: true },
         ];
     }
@@ -108,6 +109,7 @@ export class Running extends State {
             { key: 'ArrowUp', state: states.JUMPING, speed: 1, needsEnergy: false },
             { key: 'SwipeUp', state: states.JUMPING, speed: 1, needsEnergy: false },
             { key: 'Shift', state: states.ROLLING, speed: 2, needsEnergy: true },
+            { key: 'Control', state: states.ROLLING, speed: 2, needsEnergy: true },
             { key: 'AttackBtn', state: states.ROLLING, speed: 2, needsEnergy: true },
         ];
     }
@@ -134,6 +136,7 @@ export class Jumping extends State {
             { key: 'ArrowDown', state: states.DIVING, speed: 0, needsEnergy: false },
             { key: 'SwipeDown', state: states.DIVING, speed: 0, needsEnergy: false },
             { key: 'Shift', state: states.ROLLING, speed: 2, needsEnergy: true },
+            { key: 'Control', state: states.ROLLING, speed: 2, needsEnergy: true },
             { key: 'AttackBtn', state: states.ROLLING, speed: 2, needsEnergy: true },
         ];
     }
@@ -198,7 +201,7 @@ export class Rolling extends State {
             this.game.player.setState(states.DIVING, 0);
             return;
         }
-        if (!input.includes('Shift') && !input.includes('AttackBtn')) {
+        if (!input.includes('Shift') && !input.includes('AttackBtn') && !input.includes('Control')) {
             (this.game.player.onGround()) ? this.game.player.setState(states.RUNNING, 1) : this.game.player.setState(states.FALLING, 1);
             return;
         }
@@ -252,7 +255,7 @@ export class Diving extends State {
                     new Splash(this.game, this.game.player.x + this.game.player.width * 0, this.game.player.y + this.game.player.height * 0.2)
                 );
             };
-            ((input.includes('Shift') || input.includes('AttackBtn')) && this.game.player.energy > 0)
+            ((input.includes('Shift') || !input.includes('Control') || input.includes('AttackBtn')) && this.game.player.energy > 0)
                 ? this.game.player.setState(states.ROLLING, 2)
                 : this.game.player.setState(states.RUNNING, 1);
         }
