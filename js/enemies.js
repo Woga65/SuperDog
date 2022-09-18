@@ -23,7 +23,7 @@ class Enemy {
             this.frameTimer += deltaTime;
         }
         // check if off screen
-        if (this.x + this.width < -this.game.width * 2 || this.x + this.width > this.game.width * 2) 
+        if (this.x + this.width < -this.game.width * 1 || this.x + this.width > this.game.width * 2) 
             this.markedForDeletion = true;
     }
     draw(context) {

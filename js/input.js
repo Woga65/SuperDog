@@ -15,15 +15,15 @@ export class InputHandler {
 
         // keyboard events
 
-        // check if pressed key is a valid input
+        // check if the pressed key is a valid input
         // if so, push it to the keys array
         window.addEventListener('keydown', e => {
             if (this.validInputs.includes(e.key) && !this.keys.includes(e.key)) {
                 this.keys.push(e.key);
             }
         });
-        // check if released key is a valid input
-        // if so, remove it to the keys array
+        // check if the released key is a valid input
+        // if so, remove it from the keys array
         window.addEventListener('keyup', e => {
             if (this.validInputs.includes(e.key)) {
                 this.keys.splice(this.keys.indexOf(e.key), 1);
@@ -83,7 +83,10 @@ export class InputHandler {
         if (key === 'F1') this.game.debug = !this.game.debug;
         if (key === 'Pause') this.game.pause = !this.game.pause;
         if (key === 'Enter' && this.game.gameOver) this.game.restart();
-        if (key === 'Enter' && this.game.firstStart) this.game.firstStart = false;
+        if (key === 'Enter' && this.game.firstStart) {
+            this.game.setStartTime();
+            this.game.firstStart = false;
+        }
     }
     // remove a specific input from the keys array
     resetInput(key) {

@@ -33,8 +33,13 @@ class Game {
         this.gameOver = false;
         this.firstStart = true;     // display help message on first start
         this.lastTime = 0;          // counter for consitent animation speed
+        this.maxLevel = 4;          // level count
+        this.level = 0;             // current level (0 = practice, 1 - 3 ascending difficulty, 4 = crazy)
+        this.startTime = 0;         // time when the level has been started
     }
-    start() {
+    start(level = 4) {
+        this.level = level;
+        console.log('lvl: ', this.level);
         this.gameOver = false;
         this.score = 0;             // initial score
         this.time = 0;              // elapsed time
@@ -49,24 +54,29 @@ class Game {
         this.messages = [];
         this.enemyTimer = 0;        // count the time until a new enemy will be placed
         this.itemsTimer = 0;        // count the time until a new item will be placed
+        this.setStartTime();        // get the time when the level has been started
         this.animate(0);            // start game
     }
     restart() {
         this.firstStart = false;
-        this.start();
+        this.level = (this.level + 1) % (this.maxLevel + 1);
+        this.start(this.level);
+    }
+    setStartTime() {
+        this.startTime = +new Date();
     }
     update(deltaTime) {
-        this.time += deltaTime;
+        this.time = +new Date() - this.startTime;
         // check for game over
         if (this.time >= this.maxTime) this.gameOver = true;
         // background and player
         this.background.update();
         this.player.update(this.input.keys, deltaTime);
         // handle enemies
-        this.enemyTimer = (this.enemyTimer > this.enemyInterval) ? this.addEnemy() : this.enemyTimer + deltaTime; 
+        this.enemyTimer = (this.enemyTimer > this.enemyInterval) ? this.addEnemy() : this.enemyTimer + deltaTime;
         this.enemies.forEach(enemy => enemy.update(deltaTime));
         // handle items
-        this.itemsTimer = (this.itemsTimer > this.itemsInterval) ? this.addItem() : this.itemsTimer + deltaTime; 
+        this.itemsTimer = (this.itemsTimer > this.itemsInterval) ? this.addItem() : this.itemsTimer + deltaTime;
         this.items.forEach(item => item.update(deltaTime));
         // handle messages
         this.messages.forEach(message => message.update(deltaTime));
@@ -95,14 +105,24 @@ class Game {
     addEnemy() {
         this.randomModifier = (this.speed) ? 1 : 0.5;
         if (this.speed != 0) {
-            (Math.random() < 0.5) ? this.enemies.push(new GroundEnemy(this)) : this.enemies.push(new ClimbingEnemy(this));
+            if (this.level > 0) {
+                (Math.random() < 0.5)
+                    ? this.enemies.push(new GroundEnemy(this))
+                    : this.enemies.push(new ClimbingEnemy(this));
+            } else {
+                this.enemies.push(new GroundEnemy(this));
+            }
         }
         if (Math.random() < 0.7) {
-            this.enemies.push(new FlyingEnemy(this));
-            this.enemies.push(new FlyingEnemy(this));
+            if (this.level > 1) {
+                this.enemies.push(new FlyingEnemy(this));
+                if (this.level > 3) this.enemies.push(new FlyingEnemy(this));
+            }
         }
         if (Math.random() < 0.5 * this.randomModifier) {
-            this.enemies.push(new WalkingEnemy(this));
+            if (this.level > 2) {
+                this.enemies.push(new WalkingEnemy(this));
+            }
         }
         return 0;
     }
@@ -121,7 +141,7 @@ class Game {
     }
     // let the nose allways point forward
     flipImage(context, x, width, flipIt) {
-        return (flipIt) ? (this.isFlipped = true, context.save(), context.translate(width, 0), context.scale(-1, 1), -x) : x; 
+        return (flipIt) ? (this.isFlipped = true, context.save(), context.translate(width, 0), context.scale(-1, 1), -x) : x;
     }
     flipImageBack(context, x, flipIt) {
         return (flipIt) ? (this.isFlipped = false, context.restore(), -x) : x;
@@ -142,9 +162,9 @@ class Game {
         this.context.clearRect(0, 0, this.width, this.height);
         if (!this.pause && !this.firstStart) this.update(deltaTime);
         this.draw(this.context);
-        if (!this.gameOver) requestAnimationFrame(ts => this.animate(ts));
+        if (!this.gameOver) requestAnimationFrame(ts => this.animate(ts))
     }
 }
 
 const game = new Game(canvas);
-game.start();
+game.start(0);
