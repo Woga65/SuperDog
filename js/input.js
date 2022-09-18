@@ -63,12 +63,9 @@ export class InputHandler {
         // also, check for special swipes
         window.addEventListener('touchend', e => {
             e.preventDefault();
-            if (this.game.gameOver && this.keys.includes('SwipeUp')) {
-                this.keys = [];
-                this.game.restart();
-            }
-            if (this.game.firstStart && this.keys.includes('SwipeUp')) this.game.firstStart = false;
-            this.keys = this.keys.filter(key => !this.validInputs.includes(key));
+            this.processSpecialSwipes()
+                ? this.keys = []
+                : this.keys = this.keys.filter(key => !this.validInputs.includes(key));
         });
     }
 
@@ -92,6 +89,22 @@ export class InputHandler {
             this.game.setStartTime();
             this.game.firstStart = false;
         }
+    }
+    // handle special swipes like
+    // restart and next level
+    processSpecialSwipes() {
+        if (this.keys.includes('SwipeUp') && this.game.gameOver) {
+            this.game.score >= this.game.minScore[this.game.level] && this.game.level < this.game.maxLevel 
+                ? this.game.nextLevel()
+                : this.game.restart();
+            return true;
+        }
+        if (this.game.firstStart && this.keys.includes('SwipeUp')) {
+            this.game.setStartTime();
+            this.game.firstStart = false;
+            return true;
+        }
+        return false;
     }
     // remove a specific input from the keys array
     resetInput(key) {
