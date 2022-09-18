@@ -82,7 +82,12 @@ export class InputHandler {
     processSpecialKeys(key) {
         if (key === 'F1') this.game.debug = !this.game.debug;
         if (key === 'Pause') this.game.pause = !this.game.pause;
-        if (key === 'Enter' && this.game.gameOver) this.game.restart();
+        if (key === 'Enter' && this.game.gameOver) {
+            this.game.score >= this.game.minScore[this.game.level] && this.game.level < this.game.maxLevel 
+                ? this.game.nextLevel()
+                : this.game.restart();
+            return;
+        }
         if (key === 'Enter' && this.game.firstStart) {
             this.game.setStartTime();
             this.game.firstStart = false;

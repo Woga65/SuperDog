@@ -29,7 +29,9 @@ class Game {
         this.debug = false;         // display hit boxes
         this.pause = false;
         this.fontColor = 'black';
-        this.maxTime = 90000;       // duration of the game
+        this.maxTime = [40000, 45000, 45000, 90000, 90000]; // duration of a level
+        this.minScore = [ 50, 60, 60, 130, 130 ];           // the minimum score that is needed to win a level
+        this.totalScore = 0;                                // initial score
         this.gameOver = false;
         this.firstStart = true;     // display help message on first start
         this.lastTime = 0;          // counter for consitent animation speed
@@ -39,9 +41,8 @@ class Game {
     }
     start(level = 4) {
         this.level = level;
-        console.log('lvl: ', this.level);
         this.gameOver = false;
-        this.score = 0;             // initial score
+        this.score = 0;             // initial level score
         this.time = 0;              // elapsed time
         this.speed = 0;             // actual speed for side scrolling
         this.player.restart();
@@ -58,6 +59,12 @@ class Game {
         this.animate(0);            // start game
     }
     restart() {
+        this.totalScore = 0;
+        this.firstStart = true;
+        this.level = 0;
+        this.start(this.level);
+    }
+    nextLevel() {
         this.firstStart = false;
         this.level = (this.level + 1) % (this.maxLevel + 1);
         this.start(this.level);
@@ -68,7 +75,7 @@ class Game {
     update(deltaTime) {
         this.time = +new Date() - this.startTime;
         // check for game over
-        if (this.time >= this.maxTime) this.gameOver = true;
+        if (this.time >= this.maxTime[this.level]) this.gameOver = true;
         // background and player
         this.background.update();
         this.player.update(this.input.keys, deltaTime);

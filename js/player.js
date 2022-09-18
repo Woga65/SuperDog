@@ -93,7 +93,8 @@ export class Player {
                 this.game.collisions.push(new CollisionAnimation(this.game, enemy.x + enemy.width * 0.5, enemy.y + enemy.height * 0.5));
                 if (this.scoreFactor > 0) {
                     this.game.score += this.scoreFactor;     // enemy got hit by player
-                    this.game.messages.push(new floatingMessage(this.game.fontColor, this.scoreFactor, enemy.x, enemy.y, 145, 50));
+                    this.game.totalScore += this.scoreFactor;
+                    this.game.messages.push(new floatingMessage(this.game.fontColor, this.scoreFactor, enemy.x, enemy.y, 145, 35));
                 } else {
                     this.setState(6, 0);    // player got hit by enemy -> dizzy animation
                 }
@@ -105,7 +106,7 @@ export class Player {
             if (this.game.checkCollision(item, this)) {    // has a power-up been collected?
                 item.markedForDeletion = true;
                 (this.energy < this.maxEnergy - item.energyBoost) ? this.energy += item.energyBoost : this.energy = this.maxEnergy;
-                this.game.messages.push(new floatingMessage('#ffac5c', item.energyBoost / 1000, item.x, item.y + 75, 130, 155));
+                this.game.messages.push(new floatingMessage('#ffac5c', item.energyBoost / 1000, item.x, item.y + 75, 215, 135));
             }
         });
     }

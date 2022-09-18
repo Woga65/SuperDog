@@ -5,8 +5,8 @@ export class UI {
         this.fontFamily = 'Helvetica';
     }
     draw(context) {
-        // score + timer
-        UI.scoreAndTimer(context, this.game, this.fontFamily, this.fontSize);
+        // score + level
+        UI.scoreAndLevel(context, this.game, this.fontFamily, this.fontSize);
         // progress bar
         UI.timeLeftBar(context, this.game, this.fontFamily, this.fontSize);
         // energy bar
@@ -24,7 +24,7 @@ export class UI {
         context.shadowBlur = 0; 
         context.textAlign = 'center';
         context.font = fontSize * 2.0 + 'px ' + fontFamily;
-        if (game.score > 130) {
+        if (game.score >= game.minScore[game.level]) {
             context.fillText('Boo-yah', game.width * 0.5, game.height * 0.5 - 60);
             context.font = fontSize * 0.7 + 'px ' + fontFamily;
             context.fillText('What are creatures of the night afraid of? YOU!!!', game.width * 0.5, game.height * 0.5 - 20);
@@ -55,43 +55,58 @@ export class UI {
     }
     // we do not use text shadow in the main loop 
     // because of it's lack of performance 
-    static scoreAndTimer(context, game, fontFamily, fontSize) {
+    static scoreAndLevel(context, game, fontFamily, fontSize) {
+        // score + level shadow
         context.textAlign = 'left';
-        // score + timer shadow
         context.font = fontSize + 'px ' + fontFamily;
         context.fillStyle = 'white';
-        context.fillText('Score: ' + game.score, 22, 52);
-        context.font = fontSize * 0.8 + 'px ' + fontFamily;
-        context.fillText('Time: ' + Math.abs((game.maxTime - game.time) * 0.001).toFixed(1) , 22, 82);
-        // score + timer
+        context.fillText('Score: ' + game.totalScore, 22, 42);
+        context.textAlign = 'right';
+        context.fillText('Level:   ' + (game.level + 1).toFixed().valueOf() + '  ', game.width, 42);
+        // score + level
+        context.textAlign = 'left';
         context.font = fontSize + 'px ' + fontFamily;
         context.fillStyle = game.fontColor;
-        context.fillText('Score: ' + game.score, 20, 50);
-        context.font = fontSize * 0.8 + 'px ' + fontFamily;
-        context.fillText('Time: ' + Math.abs((game.maxTime - game.time) * 0.001).toFixed(1), 20, 80);
+        context.fillText('Score: ' + game.totalScore, 20, 40);
+        context.textAlign = 'right';
+        context.fillText('Level:   ' + (game.level + 1).toFixed().valueOf() + '  ', game.width - 2, 40);
     }
     static timeLeftBar(context, game, fontFamily, fontSize) {
         context.save();
         context.font = fontSize * 0.8 + 'px ' + fontFamily;
+
+        context.textAlign = 'left';
+        context.fillStyle = 'white';
+        context.fillText('Time: ' , 22, 87);
+        context.fillStyle = game.fontColor;
+        context.fillText('Time: ' , 20, 85);
+
         context.textAlign = 'center';
         context.fillStyle = '#444444';
-        context.strokeRect(20, 92, 104, 30);
+        context.strokeRect(110, 62, 104, 30);
         context.fillStyle = '#20c7f0';
-        context.fillRect(22, 94, (100 - (game.time / game.maxTime) * 100).toFixed().valueOf(), 26);
+        context.fillRect(112, 64, (100 - (game.time / game.maxTime[game.level]) * 100).toFixed().valueOf(), 26);
         context.fillStyle = '#444444';
-        context.fillText(Math.abs(100 - (game.time / game.maxTime) * 100).toFixed().valueOf(), 72, 116);
+        context.fillText(Math.abs(100 - (game.time / game.maxTime[game.level]) * 100).toFixed().valueOf(), 158, 86);
         context.restore();
     }
     static energyLeftBar(context, game, fontFamily, fontSize) {
         context.save();
         context.font = fontSize * 0.8 + 'px ' + fontFamily;
+
+        context.textAlign = 'left';
+        context.fillStyle = 'white';
+        context.fillText('Energy: ' , 22, 128);
+        context.fillStyle = game.fontColor;
+        context.fillText('Energy: ' , 20, 126);
+
         context.textAlign = 'center';
         context.fillStyle = '#444444';
-        context.strokeRect(20, 132, 104, 30);
+        context.strokeRect(110, 104, 104, 30);
         context.fillStyle = '#ffac5c';
-        context.fillRect(22, 134, ((game.player.energy / game.player.maxEnergy) * 100).toFixed().valueOf(), 26);
+        context.fillRect(112, 106, ((game.player.energy / game.player.maxEnergy) * 100).toFixed().valueOf(), 26);
         context.fillStyle = '#444444';
-        context.fillText(Math.abs((game.player.energy / game.player.maxEnergy) * 100).toFixed().valueOf(), 72, 156);
+        context.fillText(Math.abs((game.player.energy / game.player.maxEnergy) * 100).toFixed().valueOf(), 158, 128);
         context.restore();
     }
 }
