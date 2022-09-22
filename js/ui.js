@@ -1,3 +1,5 @@
+import { states } from "./level-states.js";
+
 export class UI {
     constructor(game) {
         this.game = game;
@@ -11,12 +13,33 @@ export class UI {
         UI.timeLeftBar(context, this.game, this.fontFamily, this.fontSize);
         // energy bar
         UI.energyLeftBar(context, this.game, this.fontFamily, this.fontSize);
-        // game over msg
-        if (this.game.gameOver) UI.gameOverMsg(context, this.game, this.fontFamily, this.fontSize);
         // how to play game msg
-        if (this.game.firstStart) UI.gameStartMsg(context, this.game, this.fontFamily, this.fontSize);
+        if (this.game.firstStart) {
+            UI.gameStartMsg(context, this.game, this.fontFamily, this.fontSize);
+            return;
+        }
+        // level over msg
+        if (this.game.currentLevel.finished) UI.levelFinishedMsg(context, this.game, this.fontFamily, this.fontSize);
+        // level start msg
+        if (this.game.currentLevel.state == states.WAITING) UI.levelStartMsg(context, this.game, this.fontFamily, this.fontSize);
     }
-    static gameOverMsg(context, game, fontFamily, fontSize) {
+    
+    static levelStartMsg(context, game, fontFamily, fontSize) {
+        const level = game.currentLevel;
+        context.save();
+        context.shadowOffsetX = 2;
+        context.shadowOffsetY = 2;
+        context.shadowColor = 'white';
+        context.shadowBlur = 0; 
+        context.textAlign = 'center';
+        context.font = fontSize * 1.2 + 'px ' + fontFamily;
+        context.fillText(level.text.description[0], game.width * 0.5, game.height * 0.5 - 60);
+        context.fillText(level.text.description[1], game.width * 0.5, game.height * 0.5 - 20);
+        context.fillText(level.text.description[2], game.width * 0.5, game.height * 0.5 + 40);
+        context.restore();
+    }
+    static levelFinishedMsg(context, game, fontFamily, fontSize) {
+        const level = game.currentLevel;
         context.save();
         context.shadowOffsetX = 2;
         context.shadowOffsetY = 2;
@@ -24,17 +47,19 @@ export class UI {
         context.shadowBlur = 0; 
         context.textAlign = 'center';
         context.font = fontSize * 2.0 + 'px ' + fontFamily;
-        if (game.score >= game.minScore[game.level]) {
-            context.fillText('Boo-yah', game.width * 0.5, game.height * 0.5 - 60);
+        if (level.state == states.WON) {
+            context.fillText(level.text.hasWon[0], game.width * 0.5, game.height * 0.5 - 60);
             context.font = fontSize * 0.7 + 'px ' + fontFamily;
-            context.fillText('What are creatures of the night afraid of? YOU!!!', game.width * 0.5, game.height * 0.5 - 20);
+            context.fillText(level.text.hasWon[1], game.width * 0.5, game.height * 0.5 - 20);
+            context.font = fontSize * 1 + 'px ' + fontFamily;
+            context.fillText(level.text.hasWon[2], game.width * 0.5, game.height * 0.5 + 40);
         } else {
-            context.fillText('Love at first bite?', game.width * 0.5, game.height * 0.5 - 60);
+            context.fillText(level.text.hasLost[0], game.width * 0.5, game.height * 0.5 - 60);
             context.font = fontSize * 0.7 + 'px ' + fontFamily;
-            context.fillText('Nope. Better luck next time!', game.width * 0.5, game.height * 0.5 - 20);
+            context.fillText(level.text.hasLost[1], game.width * 0.5, game.height * 0.5 - 20);
+            context.font = fontSize * 1 + 'px ' + fontFamily;
+            context.fillText(level.text.hasLost[2], game.width * 0.5, game.height * 0.5 + 40);
         }
-        context.font = fontSize * 1 + 'px ' + fontFamily;
-        context.fillText('Hit ENTER to restart.', game.width * 0.5, game.height * 0.5 + 40);
         context.restore();
     }
     static gameStartMsg(context, game, fontFamily, fontSize) {
@@ -85,9 +110,9 @@ export class UI {
         context.fillStyle = '#444444';
         context.strokeRect(110, 62, 104, 30);
         context.fillStyle = '#20c7f0';
-        context.fillRect(112, 64, (100 - (game.time / game.maxTime[game.level]) * 100).toFixed().valueOf(), 26);
+        context.fillRect(112, 64, (100 - (game.currentLevel.time / game.currentLevel.maxTime) * 100).toFixed().valueOf(), 26);
         context.fillStyle = '#444444';
-        context.fillText(Math.abs(100 - (game.time / game.maxTime[game.level]) * 100).toFixed().valueOf(), 158, 86);
+        context.fillText(Math.abs(100 - (game.currentLevel.time / game.currentLevel.maxTime) * 100).toFixed().valueOf(), 158, 86);
         context.restore();
     }
     static energyLeftBar(context, game, fontFamily, fontSize) {

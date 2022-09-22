@@ -4,6 +4,8 @@ import { Background } from "./background.js";
 import { FlyingEnemy, GroundEnemy, ClimbingEnemy, WalkingEnemy } from "./enemies.js";
 import { FlameItem } from "./items.js";
 import { UI } from "./ui.js";
+import { Level } from "./levels.js";
+import { states } from "./level-states.js";
 
 
 const canvas = document.getElementById('canvas1');
@@ -32,16 +34,21 @@ class Game {
         this.maxTime = [40000, 45000, 45000, 90000, 90000]; // duration of a level
         this.minScore = [ 50, 60, 60, 130, 130 ];           // the minimum score that is needed to win a level
         this.totalScore = 0;                                // initial score
-        this.gameOver = false;
         this.firstStart = true;     // display help message on first start
         this.lastTime = 0;          // counter for consitent animation speed
-        this.maxLevel = 4;          // level count
+        this.maxLevel = 4;          // number of the last level (level count - 1)
         this.level = 0;             // current level (0 = practice, 1 - 3 ascending difficulty, 4 = crazy)
         this.startTime = 0;         // time when the level has been started
+        this.levels = [             // array of yet implemented levels
+            new Level('1', 40000, 50, this),
+            new Level('2', 45000, 60, this),
+            new Level('3', 45000, 60, this),
+            new Level('4', 90000, 130, this),
+            new Level('5', 90000, 130, this),
+        ]
     }
     start(level = 4) {
         this.level = level;
-        this.gameOver = false;
         this.score = 0;             // initial level score
         this.time = 0;              // elapsed time
         this.speed = 0;             // actual speed for side scrolling
@@ -55,7 +62,8 @@ class Game {
         this.messages = [];
         this.enemyTimer = 0;        // count the time until a new enemy will be placed
         this.itemsTimer = 0;        // count the time until a new item will be placed
-        this.setStartTime();        // get the time when the level has been started
+        this.currentLevel = this.levels[this.level];
+        //this.currentLevel.start();
         this.animate(0);            // start game
     }
     restart() {
@@ -69,14 +77,14 @@ class Game {
         this.level = (this.level + 1) % (this.maxLevel + 1);
         this.start(this.level);
     }
-    setStartTime() {
-        this.startTime = +new Date();
-    }
+    //setStartTime() {
+    //    this.startTime = +new Date();
+    //}
     update(deltaTime) {
         this.time = +new Date() - this.startTime;
-        // check for game over
-        if (this.time >= this.maxTime[this.level]) this.gameOver = true;
-        // background and player
+        // update current level's state
+        this.currentLevel.update();
+         // background and player
         this.background.update();
         this.player.update(this.input.keys, deltaTime);
         // handle enemies
@@ -167,9 +175,9 @@ class Game {
         const deltaTime = timeStamp - this.lastTime;
         this.lastTime = timeStamp;
         this.context.clearRect(0, 0, this.width, this.height);
-        if (!this.pause && !this.firstStart) this.update(deltaTime);
+        if (!this.pause && !this.firstStart && this.currentLevel.state != states.WAITING) this.update(deltaTime);
         this.draw(this.context);
-        if (!this.gameOver) requestAnimationFrame(ts => this.animate(ts))
+        if (!this.currentLevel.finished) requestAnimationFrame(ts => this.animate(ts))
     }
 }
 

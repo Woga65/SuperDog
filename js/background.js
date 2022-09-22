@@ -17,7 +17,7 @@ class Layer {
         if (this.game.speed >= 0 && this.x < -this.width) {     // regular scrolling
             this.x = 0; 
         }
-        if (this.game.speed < 0 && this.x > this.width) {       // reverse scrolling, for future use  
+        if (this.game.speed < 0 && this.x > this.width) {       // reverse scrolling  
             this.x = -this.width; 
         }
         this.x -= (this.isMoving) ? this.speedModifier + (this.game.speed * this.speedModifier) : this.game.speed * this.speedModifier;

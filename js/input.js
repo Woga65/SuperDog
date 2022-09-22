@@ -1,3 +1,5 @@
+import { states } from "./level-states.js";
+
 export class InputHandler {
     constructor(game) {
         this.game = game;
@@ -79,29 +81,37 @@ export class InputHandler {
     processSpecialKeys(key) {
         if (key === 'F1') this.game.debug = !this.game.debug;
         if (key === 'Pause') this.game.pause = !this.game.pause;
-        if (key === 'Enter' && this.game.gameOver) {
-            this.game.score >= this.game.minScore[this.game.level] && this.game.level < this.game.maxLevel 
+        if (key === 'Enter' && this.game.currentLevel.finished) {
+            this.game.currentLevel.state == states.WON && this.game.level < this.game.maxLevel
                 ? this.game.nextLevel()
                 : this.game.restart();
             return;
         }
         if (key === 'Enter' && this.game.firstStart) {
-            this.game.setStartTime();
+            //this.game.currentLevel.start();
             this.game.firstStart = false;
+            return;
+        }
+        if (key === 'Enter' && this.game.currentLevel.state == states.WAITING) {
+            this.game.currentLevel.start();
         }
     }
     // handle special swipes like
     // restart and next level
     processSpecialSwipes() {
-        if (this.keys.includes('SwipeUp') && this.game.gameOver) {
-            this.game.score >= this.game.minScore[this.game.level] && this.game.level < this.game.maxLevel 
+        if (this.keys.includes('SwipeUp') && this.game.currentLevel.finished) {
+            this.game.currentLevel.state == states.WON && this.game.level < this.game.maxLevel
                 ? this.game.nextLevel()
                 : this.game.restart();
             return true;
         }
         if (this.game.firstStart && this.keys.includes('SwipeUp')) {
-            this.game.setStartTime();
+            //this.game.currentLevel.start();
             this.game.firstStart = false;
+            return true;
+        }
+        if (this.game.currentLevel.state == states.WAITING && this.keys.includes('SwipeUp')) {
+            this.game.currentLevel.start();
             return true;
         }
         return false;
