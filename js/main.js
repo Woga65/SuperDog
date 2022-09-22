@@ -31,9 +31,7 @@ class Game {
         this.debug = false;         // display hit boxes
         this.pause = false;
         this.fontColor = 'black';
-        this.maxTime = [40000, 45000, 45000, 90000, 90000]; // duration of a level
-        this.minScore = [ 50, 60, 60, 130, 130 ];           // the minimum score that is needed to win a level
-        this.totalScore = 0;                                // initial score
+        this.totalScore = 0;        // initial score
         this.firstStart = true;     // display help message on first start
         this.lastTime = 0;          // counter for consitent animation speed
         this.maxLevel = 4;          // number of the last level (level count - 1)
@@ -63,7 +61,6 @@ class Game {
         this.enemyTimer = 0;        // count the time until a new enemy will be placed
         this.itemsTimer = 0;        // count the time until a new item will be placed
         this.currentLevel = this.levels[this.level];
-        //this.currentLevel.start();
         this.animate(0);            // start game
     }
     restart() {
@@ -77,9 +74,6 @@ class Game {
         this.level = (this.level + 1) % (this.maxLevel + 1);
         this.start(this.level);
     }
-    //setStartTime() {
-    //    this.startTime = +new Date();
-    //}
     update(deltaTime) {
         this.time = +new Date() - this.startTime;
         // update current level's state

@@ -88,7 +88,6 @@ export class InputHandler {
             return;
         }
         if (key === 'Enter' && this.game.firstStart) {
-            //this.game.currentLevel.start();
             this.game.firstStart = false;
             return;
         }
@@ -106,7 +105,6 @@ export class InputHandler {
             return true;
         }
         if (this.game.firstStart && this.keys.includes('SwipeUp')) {
-            //this.game.currentLevel.start();
             this.game.firstStart = false;
             return true;
         }
