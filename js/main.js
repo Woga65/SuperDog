@@ -61,6 +61,7 @@ class Game {
         this.enemyTimer = 0;        // count the time until a new enemy will be placed
         this.itemsTimer = 0;        // count the time until a new item will be placed
         this.currentLevel = this.levels[this.level];
+        this.currentLevel.reset();
         this.animate(0);            // start game
     }
     restart() {
