@@ -9,7 +9,7 @@ import { states } from "./level-states.js";
 
 
 const canvas = document.getElementById('canvas1');
-canvas.width = 1368;
+canvas.width = window.innerWidth > 1667 ? 1667 : window.innerWidth; // 1368;
 canvas.height = 500;
 
 class Game {
