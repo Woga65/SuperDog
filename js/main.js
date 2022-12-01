@@ -8,9 +8,11 @@ import { Level } from "./levels.js";
 import { states } from "./level-states.js";
 
 
+const demo = document.getElementById('demo1');
 const canvas = document.getElementById('canvas1');
-canvas.width = window.innerWidth > 1667 ? 1667 : window.innerWidth; // 1368;
+canvas.width = window.innerWidth > 1667 ? 1667 : window.innerWidth < 1280 ? 1280 : window.innerWidth; // 1368;
 canvas.height = 500;
+
 
 class Game {
     constructor(canvas) {
@@ -18,7 +20,7 @@ class Game {
         this.context = this.canvas.getContext('2d');
         this.width = this.canvas.width;
         this.height = this.canvas.height;
-        this.groundMargin = 83;     // solid ground for player ans enemies to stay on
+        this.groundMargin = 83;     // solid ground for player and enemies to stay on
         this.maxSpeed = 3;          // max scrolling speed
         this.background = new Background(this);
         this.player = new Player(this);
@@ -176,5 +178,23 @@ class Game {
     }
 }
 
-const game = new Game(canvas);
-game.start(0);
+
+
+['keydown', 'touchstart', 'click'].forEach( ev => window.addEventListener(ev, startGame));
+
+
+function startGame(e) {
+    e.preventDefault();
+    ['keydown', 'touchstart', 'click'].forEach( ev => window.removeEventListener(ev, startGame));
+    setTimeout(() => {
+        const game = new Game(canvas);
+        game.start(0);
+    });
+    canvas.style.display = 'unset';
+    canvas.style.opacity = '1';
+    demo.style.opacity = '0';
+    demo.style.display = 'none';
+}
+
+
+
