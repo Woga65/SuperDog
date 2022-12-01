@@ -8,11 +8,17 @@ import { Level } from "./levels.js";
 import { states } from "./level-states.js";
 
 
+/* canvas and demo video */
+
 const demo = document.getElementById('demo1');
 const canvas = document.getElementById('canvas1');
 canvas.width = window.innerWidth > 1667 ? 1667 : window.innerWidth < 1280 ? 1280 : window.innerWidth; // 1368;
 canvas.height = 500;
 
+
+/********************** 
+ *  Main Game Class  **
+ **********************/
 
 class Game {
     constructor(canvas) {
@@ -179,22 +185,33 @@ class Game {
 }
 
 
+/* Initialize Game */ 
 
-['keydown', 'touchstart', 'click'].forEach( ev => window.addEventListener(ev, startGame));
+addStartGameListeners();
 
 
-function startGame(e) {
+function startGameListener(e) {
     e.preventDefault();
-    ['keydown', 'touchstart', 'click'].forEach( ev => window.removeEventListener(ev, startGame));
-    setTimeout(() => {
-        const game = new Game(canvas);
-        game.start(0);
-    });
+    removeStartGameListeners();
+    setTimeout(() => startGame());
     canvas.style.display = 'unset';
-    canvas.style.opacity = '1';
     demo.style.opacity = '0';
-    demo.style.display = 'none';
+    setTimeout(() => canvas.style.opacity = '1');
+    setTimeout(() => demo.style.display = 'none', 500);
 }
 
 
+function startGame() {
+    const game = new Game(canvas);
+    game.start(0);
+}
 
+
+function addStartGameListeners() {
+    ['keydown', 'touchstart', 'click'].forEach( ev => window.addEventListener(ev, startGameListener));
+}
+
+
+function removeStartGameListeners() {
+    ['keydown', 'touchstart', 'click'].forEach( ev => window.removeEventListener(ev, startGameListener));
+}

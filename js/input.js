@@ -6,7 +6,7 @@ export class InputHandler {
         this.keys = [];
         this.touchY = '';
         this.touchX = '';
-        this.touchTreshold = 45;
+        this.touchTreshold = 35;
         this.validInputs = [
             'SwipeUp', 'SwipeDown', 'SwipeLeft', 'SwipeRight',
             'ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight',
