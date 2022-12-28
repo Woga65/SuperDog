@@ -8,6 +8,18 @@ import { Level } from "./levels.js";
 import { states } from "./level-states.js";
 
 
+/* PWA setup */
+if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("sw.js").then(res => {
+        console.log("Service Worker registered successfully!", res);
+    }).catch(err => {
+        console.log("Service Worker registration failed: ", err);
+    });
+} else {
+    console.log("Service Worker not supported!");
+}
+
+
 /* canvas and demo video */
 
 const demo = document.getElementById('demo1');

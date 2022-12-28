@@ -14,10 +14,11 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    background-color: black;
 }
 
 #canvas1 {
-    border: 5px solid black;
+    /*border: 5px solid black;*/
     overflow: hidden;
     position: fixed;
     top: 50%;
