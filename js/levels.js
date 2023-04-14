@@ -1,5 +1,5 @@
 
-import { states } from "./level-states.js";
+import { levelStates } from "./level-states.js";
 
 export class Level {
     constructor(levelName, maxTime, minScore, game) {
@@ -9,7 +9,7 @@ export class Level {
         this.game = game;
         this.time = 0;
         this.startTime = +new Date();
-        this.state = states.WAITING;
+        this.state = levelStates.WAITING;
         this.finished = false;
         this.text = this.getLevelTexts()[this.levelName];
     }
@@ -17,18 +17,18 @@ export class Level {
         this.time = 0;
         this.startTime = +new Date();
         this.finished = false;
-        this.state = states.RUNNING; 
+        this.state = levelStates.RUNNING; 
     }
     update() {
         this.time = +new Date() - this.startTime;
         if (this.time >= this.maxTime) {
-            this.state = this.game.score >= this.minScore ? states.WON : states.LOST;
+            this.state = this.game.score >= this.minScore ? levelStates.WON : levelStates.LOST;
             this.text = this.getLevelTexts()[this.levelName];
             this.finished = true;
         }
     }
     reset() {
-        this.state = states.WAITING;
+        this.state = levelStates.WAITING;
         this.finished = false;
     }
     getLevelTexts() {

@@ -1,4 +1,4 @@
-import { states } from "./level-states.js";
+import { levelStates } from "./level-states.js";
 
 export class UI {
     constructor(game) {
@@ -21,7 +21,7 @@ export class UI {
         // level over msg
         if (this.game.currentLevel.finished) UI.levelFinishedMsg(context, this.game, this.fontFamily, this.fontSize);
         // level start msg
-        if (this.game.currentLevel.state == states.WAITING) UI.levelStartMsg(context, this.game, this.fontFamily, this.fontSize);
+        if (this.game.currentLevel.state == levelStates.WAITING) UI.levelStartMsg(context, this.game, this.fontFamily, this.fontSize);
     }
     
     static levelStartMsg(context, game, fontFamily, fontSize) {
@@ -47,7 +47,7 @@ export class UI {
         context.shadowBlur = 0; 
         context.textAlign = 'center';
         context.font = fontSize * 2.0 + 'px ' + fontFamily;
-        if (level.state == states.WON) {
+        if (level.state == levelStates.WON) {
             context.fillText(level.text.hasWon[0], game.width * 0.5, game.height * 0.5 - 60);
             context.font = fontSize * 0.7 + 'px ' + fontFamily;
             context.fillText(level.text.hasWon[1], game.width * 0.5, game.height * 0.5 - 20);

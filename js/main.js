@@ -5,7 +5,7 @@ import { FlyingEnemy, GroundEnemy, ClimbingEnemy, WalkingEnemy } from "./enemies
 import { FlameItem } from "./items.js";
 import { UI } from "./ui.js";
 import { Level } from "./levels.js";
-import { states } from "./level-states.js";
+import { levelStates } from "./level-states.js";
 
 
 /* PWA setup */
@@ -190,7 +190,7 @@ class Game {
         const deltaTime = timeStamp - this.lastTime;
         this.lastTime = timeStamp;
         this.context.clearRect(0, 0, this.width, this.height);
-        if (!this.pause && !this.firstStart && this.currentLevel.state != states.WAITING) this.update(deltaTime);
+        if (!this.pause && !this.firstStart && this.currentLevel.state != levelStates.WAITING) this.update(deltaTime);
         this.draw(this.context);
         if (!this.currentLevel.finished) requestAnimationFrame(ts => this.animate(ts))
     }

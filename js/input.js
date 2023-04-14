@@ -1,4 +1,4 @@
-import { states } from "./level-states.js";
+import { levelStates } from "./level-states.js";
 
 export class InputHandler {
     constructor(game) {
@@ -82,7 +82,7 @@ export class InputHandler {
         if (key === 'F1') this.game.debug = !this.game.debug;
         if (key === 'Pause') this.game.pause = !this.game.pause;
         if (key === 'Enter' && this.game.currentLevel.finished) {
-            this.game.currentLevel.state == states.WON && this.game.level < this.game.maxLevel
+            this.game.currentLevel.state == levelStates.WON && this.game.level < this.game.maxLevel
                 ? this.game.nextLevel()
                 : this.game.restart();
             return;
@@ -91,7 +91,7 @@ export class InputHandler {
             this.game.firstStart = false;
             return;
         }
-        if (key === 'Enter' && this.game.currentLevel.state == states.WAITING) {
+        if (key === 'Enter' && this.game.currentLevel.state == levelStates.WAITING) {
             this.game.currentLevel.start();
         }
     }
@@ -99,7 +99,7 @@ export class InputHandler {
     // restart and next level
     processSpecialSwipes() {
         if (this.keys.includes('SwipeUp') && this.game.currentLevel.finished) {
-            this.game.currentLevel.state == states.WON && this.game.level < this.game.maxLevel
+            this.game.currentLevel.state == levelStates.WON && this.game.level < this.game.maxLevel
                 ? this.game.nextLevel()
                 : this.game.restart();
             return true;
@@ -108,7 +108,7 @@ export class InputHandler {
             this.game.firstStart = false;
             return true;
         }
-        if (this.game.currentLevel.state == states.WAITING && this.keys.includes('SwipeUp')) {
+        if (this.game.currentLevel.state == levelStates.WAITING && this.keys.includes('SwipeUp')) {
             this.game.currentLevel.start();
             return true;
         }
