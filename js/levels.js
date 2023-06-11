@@ -54,7 +54,7 @@ export class Level {
                 ],
                 hasWon: [
                     'Not bad!',
-                    `You've added ${this.game.score} points to your scrore.`,
+                    `You've added ${this.game.score} points to your score.`,
                     'Hit ENTER or SWIPE UP to start the next level.',
                 ],
                 hasLost: this.getLevelLostText(),
@@ -67,7 +67,7 @@ export class Level {
                 ],
                 hasWon: [
                     `Bravo!`,
-                    `You've added another ${this.game.score} points to your scrore.`,
+                    `You've added another ${this.game.score} points to your score.`,
                     'Hit ENTER or SWIPE UP to start the next level.',
                 ],
                 hasLost: this.getLevelLostText(),
