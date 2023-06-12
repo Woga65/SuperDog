@@ -1,4 +1,3 @@
-
 import { levelStates } from "./level-states.js";
 
 export class Level {

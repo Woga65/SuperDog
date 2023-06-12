@@ -3,4 +3,4 @@ export const levelStates = {
     RUNNING: 1,
     WON: 2,
     LOST: 3
-}
+};
