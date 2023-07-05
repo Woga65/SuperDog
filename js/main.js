@@ -1,7 +1,6 @@
 import { Player } from "./player.js";
 import { InputHandler } from "./input.js";
 import { Background } from "./background.js";
-import { FlyingEnemy, GroundEnemy, ClimbingEnemy, WalkingEnemy } from "./enemies.js";
 import { FlameItem } from "./items.js";
 import { UI } from "./ui.js";
 import { Level } from "./levels.js";
@@ -133,27 +132,7 @@ class Game {
     }
     // add various enemies
     addEnemy() {
-        this.randomModifier = (this.speed) ? 1 : 0.5;
-        if (this.speed != 0) {
-            if (this.level > 0) {
-                (Math.random() < 0.5)
-                    ? this.enemies.push(new GroundEnemy(this))
-                    : this.enemies.push(new ClimbingEnemy(this));
-            } else {
-                this.enemies.push(new GroundEnemy(this));
-            }
-        }
-        if (Math.random() < 0.7) {
-            if (this.level > 1) {
-                this.enemies.push(new FlyingEnemy(this));
-                if (this.level > 3) this.enemies.push(new FlyingEnemy(this));
-            }
-        }
-        if (Math.random() < 0.5 * this.randomModifier) {
-            if (this.level > 2) {
-                this.enemies.push(new WalkingEnemy(this));
-            }
-        }
+        this.enemies = this.enemies.concat(this.currentLevel.getEnemies());
         return 0;
     }
     // add collectable power-up items
