@@ -12,6 +12,8 @@ const jsRes = [
     "./js/input.js",
     "./js/items.js",
     "./js/level-states.js",
+    "./js/level-enemies.js",
+    "./js/level-texts.js",
     "./js/levels.js",
     "./js/main.js",
     "./js/particles.js",
