@@ -33,6 +33,8 @@ canvas.height = 500;
 
 class Game {
     constructor(canvas) {
+        this.fps = 120;                         // throttle the game for it to be also 
+        this.frameInterval = 1000 / this.fps;   // playable on high refresh rate displays
         this.canvas = canvas;
         this.context = this.canvas.getContext('2d');
         this.width = this.canvas.width;
@@ -79,6 +81,7 @@ class Game {
         this.messages = [];
         this.enemyTimer = 0;        // count the time until a new enemy will be placed
         this.itemsTimer = 0;        // count the time until a new item will be placed
+        this.frameTimer = 0;
         this.currentLevel = this.levels[this.level];
         this.currentLevel.reset();
         this.animate(0);            // start game
@@ -168,10 +171,14 @@ class Game {
     animate(timeStamp) {
         const deltaTime = timeStamp - this.lastTime;
         this.lastTime = timeStamp;
-        this.context.clearRect(0, 0, this.width, this.height);
-        if (!this.pause && !this.firstStart && this.currentLevel.state != levelStates.WAITING) this.update(deltaTime);
-        this.draw(this.context);
-        if (!this.currentLevel.finished) requestAnimationFrame(ts => this.animate(ts))
+        this.frameTimer += deltaTime;
+        if (this.frameTimer >= this.frameInterval) {
+            this.frameTimer = 0;
+            this.context.clearRect(0, 0, this.width, this.height);
+            if (!this.pause && !this.firstStart && this.currentLevel.state != levelStates.WAITING) this.update(deltaTime);
+            this.draw(this.context);
+        }
+        if (!this.currentLevel.finished) requestAnimationFrame(ts => this.animate(ts));
     }
 }
 
