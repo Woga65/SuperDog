@@ -34,7 +34,7 @@ canvas.height = 500;
 class Game {
     constructor(canvas) {
         this.fps = 60;                          // while the animation loop runs at the display's FPS, 
-        this.frameInterval = 1000 / this.fps;   // keep the game loop at 60 Hz. or slightly above.
+        this.frameInterval = 1000 / this.fps;   // keep the game loop at 60 Hz or slightly above.
         this.canvas = canvas;
         this.context = this.canvas.getContext('2d');
         this.width = this.canvas.width;
@@ -84,7 +84,7 @@ class Game {
         this.currentLevel.reset();
         this.frameTimer = 0;
         this.lastTime = performance.now();  // counter for consitent animation speed
-        this.animate(this.lastTime);        // start game
+        this.animate();                     // start game
     }
     restart() {
         if (this.updateInterval) clearInterval(this.updateInterval);
@@ -170,17 +170,18 @@ class Game {
         );
     }
     // the animation loop
-    animate(timeStamp) {
+    animate() {
+        const timeStamp = performance.now();
         const deltaTime = timeStamp - this.lastTime;
         this.lastTime = timeStamp;
         this.frameTimer += deltaTime;
         if (this.frameTimer > this.frameInterval) {
-            if (!this.pause && !this.firstStart && this.currentLevel.state != levelStates.WAITING) this.update(deltaTime);
+            if (!this.pause && !this.firstStart && this.currentLevel.state != levelStates.WAITING && !this.currentLevel.finished) this.update(deltaTime);
             this.frameTimer = this.frameTimer - this.frameInterval;
         }
         this.context.clearRect(0, 0, this.width, this.height);
         this.draw(this.context);
-        if (!this.currentLevel.finished) requestAnimationFrame(_ => this.animate(performance.now()));        
+        requestAnimationFrame(this.animate.bind(this));
     }
 }
 
