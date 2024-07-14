@@ -35,7 +35,6 @@ class Game {
     constructor(canvas) {
         this.fps = 60;                          // while the animation loop runs at the display's FPS, 
         this.frameInterval = 1000 / this.fps;   // keep the game loop at 60 Hz. or slightly above.
-        this.lastTime = performance.now();      // counter for consitent animation speed
         this.canvas = canvas;
         this.context = this.canvas.getContext('2d');
         this.width = this.canvas.width;
@@ -84,7 +83,8 @@ class Game {
         this.currentLevel = this.levels[this.level];
         this.currentLevel.reset();
         this.frameTimer = 0;
-        this.animate(this.lastTime);    // start game
+        this.lastTime = performance.now();  // counter for consitent animation speed
+        this.animate(this.lastTime);        // start game
     }
     restart() {
         if (this.updateInterval) clearInterval(this.updateInterval);
