@@ -180,7 +180,7 @@ class Game {
         }
         this.context.clearRect(0, 0, this.width, this.height);
         this.draw(this.context);
-        if (!this.currentLevel.finished) requestAnimationFrame(ts => this.animate(ts));        
+        if (!this.currentLevel.finished) requestAnimationFrame(_ => this.animate(performance.now()));        
     }
 }
 
