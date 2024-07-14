@@ -33,8 +33,9 @@ canvas.height = 500;
 
 class Game {
     constructor(canvas) {
-        this.fps = 60;              // keep the FPS at fixed 60 Hz 
-        this.frameInterval = 1000 / this.fps; 
+        this.fps = 60;                          // while the animation loop runs at the display's FPS, 
+        this.frameInterval = 1000 / this.fps;   // keep the game loop at 60 Hz. or slightly above.
+        this.lastTime = performance.now();      // counter for consitent animation speed
         this.canvas = canvas;
         this.context = this.canvas.getContext('2d');
         this.width = this.canvas.width;
@@ -54,7 +55,6 @@ class Game {
         this.fontColor = 'black';
         this.totalScore = 0;        // initial score
         this.firstStart = true;     // display help message on first start
-        this.lastTime = 0;          // counter for consitent animation speed
         this.maxLevel = 4;          // number of the last level (level count - 1)
         this.level = 0;             // current level (0 = practice, 1 - 3 ascending difficulty, 4 = crazy)
         this.startTime = 0;         // time when the level has been started
@@ -81,18 +81,20 @@ class Game {
         this.messages = [];
         this.enemyTimer = 0;        // count the time until a new enemy will be placed
         this.itemsTimer = 0;        // count the time until a new item will be placed
-        this.frameTimer = 0;
         this.currentLevel = this.levels[this.level];
         this.currentLevel.reset();
-        this.animate(0);            // start game
+        this.frameTimer = 0;
+        this.animate(this.lastTime);    // start game
     }
     restart() {
+        if (this.updateInterval) clearInterval(this.updateInterval);
         this.totalScore = 0;
         this.firstStart = true;
         this.level = 0;
         this.start(this.level);
     }
     nextLevel() {
+        if (this.updateInterval) clearInterval(this.updateInterval);
         this.firstStart = false;
         this.level = (this.level + 1) % (this.maxLevel + 1);
         this.start(this.level);
@@ -167,18 +169,18 @@ class Game {
             firstObject.y + firstObject.height > secondObject.y
         );
     }
-    // the main loop
+    // the animation loop
     animate(timeStamp) {
         const deltaTime = timeStamp - this.lastTime;
         this.lastTime = timeStamp;
         this.frameTimer += deltaTime;
         if (this.frameTimer > this.frameInterval) {
-            this.context.clearRect(0, 0, this.width, this.height);
             if (!this.pause && !this.firstStart && this.currentLevel.state != levelStates.WAITING) this.update(deltaTime);
-            this.draw(this.context);
             this.frameTimer = this.frameTimer - this.frameInterval;
         }
-        if (!this.currentLevel.finished) requestAnimationFrame(ts => this.animate(ts));
+        this.context.clearRect(0, 0, this.width, this.height);
+        this.draw(this.context);
+        if (!this.currentLevel.finished) requestAnimationFrame(ts => this.animate(ts));        
     }
 }
 
